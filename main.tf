@@ -1,6 +1,6 @@
 resource "aws_vpc" "assignment2-vpc" {
   cidr_block = var.vpc-cidr-block
-  tags       = { name = "assignment2-vpc" }
+  tags       = { Name = "terraform-assignment2-vpc" }
 }
 
 resource "aws_internet_gateway" "assignment-2-vpc-igw" {
@@ -9,7 +9,7 @@ resource "aws_internet_gateway" "assignment-2-vpc-igw" {
 
 resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.assignment2-vpc.id
-  tags   = { name = "public-route-table-tags" }
+  tags   = { Name = "public-route-table-tags" }
 }
 
 resource "aws_route_table_association" "rt-association" {
@@ -21,18 +21,18 @@ resource "aws_subnet" "public-subnet" {
   availability_zone = var.az-public-subnet
   cidr_block        = var.subnet-cidr
   vpc_id            = aws_vpc.assignment2-vpc.id
-  tags              = { name = "public-subnet-tags" }
+  tags              = { Name = "public-subnet-tags" }
 }
 resource "aws_security_group" "main-security-group" {
   name        = "main-security-group"
   vpc_id      = aws_vpc.assignment2-vpc.id
   description = "inbound for all IPs -SSH, HTTP. outbound for all protocols and types"
-  tags        = { name = "main_security group tags" }
+  tags        = { Name = "main_security group tags" }
 }
 
 resource "aws_network_acl" "NACL" {
   vpc_id = aws_vpc.assignment2-vpc.id
-  tags   = { name = "NACL" }
+  tags   = { Name = "NACL" }
 }
 resource "aws_network_acl_association" "NACL-assosiation" {
   network_acl_id = aws_network_acl.NACL.id
