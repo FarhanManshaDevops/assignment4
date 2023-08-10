@@ -66,5 +66,6 @@ resource "aws_s3_bucket" "mybucket" {
     environment = "testing"
     purpose     = "for-assigment-4"
   }
+  force_destroy = true
 }
 
