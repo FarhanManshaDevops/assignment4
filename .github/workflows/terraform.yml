@@ -1,0 +1,40 @@
+name: Assignment4_Github_Actions
+on:
+  push:
+    branches:
+    - master
+  discussion:
+    branches:
+    - master
+jobs:
+  terraform:
+    
+    runs-on: ubuntu-latest
+    
+    env:
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    
+    defaults:
+      run:
+        working-directory: Terraform
+    
+    steps:
+
+      - name: checkout_Teraaform_code_from_github_repo
+        uses: actions/checkout@v1
+
+      - name: install_terraform_on_github_provisioned_server
+        uses: hashicorp/setup-terraform@v1
+
+      - name: terraform_format_command
+        run: terraform fmt
+      
+      - name: terraform_initialize_command
+        run: terraform init
+      
+      - name: terraform_planning_command
+        run: terraform plan
+    
+      - name: terraform_apply_command
+        run: terraform apply --auto-approve
