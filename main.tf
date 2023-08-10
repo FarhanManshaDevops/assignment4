@@ -39,14 +39,14 @@ resource "aws_network_acl_association" "NACL-assosiation" {
   subnet_id      = aws_subnet.public-subnet.id
 }
 
-resource "aws_instance" "ec2-instance" {
-  ami                         = var.instance-ami
-  associate_public_ip_address = var.instance-public-ip-association
-  availability_zone           = var.az-public-subnet
-  instance_type               = var.instance-type
-  vpc_security_group_ids      = [aws_security_group.main-security-group.id]
-  subnet_id                   = aws_subnet.public-subnet.id
-}
+#resource "aws_instance" "ec2-instance" {
+ # ami                         = var.instance-ami
+  #associate_public_ip_address = var.instance-public-ip-association
+  #availability_zone           = var.az-public-subnet
+  #instance_type               = var.instance-type
+  #vpc_security_group_ids      = [aws_security_group.main-security-group.id]
+  #subnet_id                   = aws_subnet.public-subnet.id
+#}
 resource "aws_ebs_volume" "ebs-vol" {
   availability_zone = var.az-public-subnet
   size              = var.ebs-size
@@ -59,9 +59,10 @@ resource "aws_volume_attachment" "vol-attach" {
   volume_id   = aws_ebs_volume.ebs-vol.id
 }
 resource "aws_s3_bucket" "mybucket" {
-  bucket = "bucket153468sd-assignment4"
+  #bucket = "bucket153468sd-assignment4"
+  #use new bucket name everytime. otherwise code not reusable.
   tags = {
-    name        = "mybucket"
+    Name        = "mybucket"
     environment = "testing"
     purpose     = "for-assigment-4"
   }
