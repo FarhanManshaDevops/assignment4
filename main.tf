@@ -7,7 +7,7 @@
     #dynamodb_table = "state_file_dynamo_db" # Optional: Enable locking with DynamoDB table
   #}
 #}
-
+#deleteit
 resource "aws_vpc" "assignment2-vpc" {
   cidr_block = var.vpc-cidr-block
   tags       = { Name = "terraform-assignment2-vpc" }
