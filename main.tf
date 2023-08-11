@@ -1,12 +1,12 @@
-terraform {
-  backend "s3" {
-    bucket         = "statefilebucket"
-    key            = "statefilebucket/statefiles/terraform.tfstate"
-    region         = "us-east-1"            # Specify the appropriate AWS region
-    encrypt        = true                   # Optional: Set to true to enable encryption
-    dynamodb_table = "state_file_dynamo_db" # Optional: Enable locking with DynamoDB table
-  }
-}
+#terraform {
+ # backend "s3" {
+  #  bucket         = "statefilebucket"
+   # key            = "statefilebucket/statefiles/terraform.tfstate"
+    #region         = "us-east-1"            # Specify the appropriate AWS region
+    #encrypt        = true                   # Optional: Set to true to enable encryption
+    #dynamodb_table = "state_file_dynamo_db" # Optional: Enable locking with DynamoDB table
+  #}
+#}
 
 resource "aws_vpc" "assignment2-vpc" {
   cidr_block = var.vpc-cidr-block
