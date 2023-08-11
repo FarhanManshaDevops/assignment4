@@ -1,3 +1,13 @@
+terraform {
+  backend "s3" {
+    bucket         = "statefilebucket"
+    key            = "statefiles/state.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "state_file_dynamo_db"  # Optional for locking
+  }
+}
+
 resource "aws_vpc" "assignment2-vpc" {
   cidr_block = var.vpc-cidr-block
   tags       = { Name = "terraform-assignment2-vpc" }
@@ -62,7 +72,7 @@ resource "aws_s3_bucket" "mybucket" {
   #bucket = "bucket153468sd-assignment4"
   #use new bucket name everytime. otherwise code not reusable.
   tags = {
-    Name        = "mybucket"
+    Name        = "Terraform-created-bucket"
     environment = "testing"
     purpose     = "for-assigment-4"
   }
