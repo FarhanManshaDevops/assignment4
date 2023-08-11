@@ -4,7 +4,7 @@ terraform {
     key            = "statefilebucket/statefiles/terraform.tfstate"
     region         = "us-east-1"            # Specify the appropriate AWS region
     encrypt        = true                   # Optional: Set to true to enable encryption
-    dynamodb_table = "state_file_dynamo_db" # Optional: Enable locking with DynamoDB table
+    dynamodb_table = "state_lock" # Optional: Enable locking with DynamoDB table
   }
 }
 
