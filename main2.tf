@@ -86,7 +86,7 @@ resource "aws_instance" "ec2-instance" {
   vpc_security_group_ids      = [aws_security_group.main-security-group.id]
   subnet_id                   = aws_subnet.public-subnet.id
   tags = {
-    Name = "assignment4instance"
+    Name = "assignment4_instance"
   }
   depends_on = [aws_vpc.assignment4-vpc]
 }
