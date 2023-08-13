@@ -1,7 +1,7 @@
 /*
 terraform {
   backend "s3" {
-    bucket         = "assignment4_tfstate"
+    bucket         = "assignment4tfstate"
     key            = "statefiles/terraform.tfstate"
     region         = "us-east-1"              
     encrypt        = true                     
@@ -12,7 +12,7 @@ terraform {
 
 
 resource "aws_s3_bucket" "statefilebucket123" {
-  bucket = "assignment4_tfstate"
+  bucket = "assignment4tfstate"
   versioning {
     enabled = true
   }
