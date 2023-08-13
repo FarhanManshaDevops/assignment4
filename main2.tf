@@ -88,6 +88,7 @@ resource "aws_instance" "ec2-instance" {
   tags = {
     Name = "assignment4instance"
   }
+  depends_on = [aws_vpc.assignment4-vpc]
 }
 
 resource "aws_ebs_volume" "ebs-vol" {
