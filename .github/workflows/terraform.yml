@@ -25,10 +25,10 @@ jobs:
         run: terraform fmt
       
       - name: terraform_initialize_command
-        run: terraform init
+        run: terraform init -lock=false
       
       - name: terraform_planning_command
-        run: terraform plan
+        run: terraform plan -lock=false
     
       - name: terraform_apply_command
         run: terraform apply --auto-approve
