@@ -1,13 +1,37 @@
 terraform {
   backend "s3" {
-    bucket         = "statefilebucket"
-    key            = "statefilebucket/statefiles/terraform.tfstate"
-    region         = "us-east-1"            # Specify the appropriate AWS region
-    encrypt        = true                   # Optional: Set to true to enable encryption
-    dynamodb_table = "state_lock" # Optional: Enable locking with DynamoDB table
+    bucket         = "assignment4_tfstate"
+    key            = "statefiles/terraform.tfstate"
+    region         = "us-east-1"              
+    encrypt        = true                     
+    dynamodb_table = "assignment4_state_lock" 
   }
 }
 
+resource "aws_s3_bucket" "statefilebucket123" {
+  bucket = "assignment4_tfstate"
+  versioning {
+    enabled = true
+  }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+resource "aws_dynamodb_table" "statelock" {
+  name         = "assignment4_state_lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LOCKID"
+  attribute {
+    name = "LOCKID"
+    type = "S"
+  }
+
+}
+/*
 resource "aws_vpc" "assignment2-vpc" {
   cidr_block = var.vpc-cidr-block
   tags       = { Name = "terraform-assignment2-vpc" }
@@ -81,5 +105,7 @@ resource "aws_s3_bucket" "mybucket" {
   }
   force_destroy = true
 }
+
+*/
 
 
