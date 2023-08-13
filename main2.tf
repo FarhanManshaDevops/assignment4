@@ -89,6 +89,7 @@ resource "aws_instance" "ec2-instance" {
     Name = "assignment4_instance"
   }
   depends_on = [aws_vpc.assignment4-vpc]
+  key_name   = "ec2keypair"
 }
 
 resource "aws_ebs_volume" "ebs-vol" {
