@@ -1,3 +1,4 @@
+/*
 terraform {
   backend "s3" {
     bucket         = "assignment4_tfstate"
@@ -7,6 +8,8 @@ terraform {
     dynamodb_table = "assignment4_state_lock" 
   }
 }
+*/
+
 
 resource "aws_s3_bucket" "statefilebucket123" {
   bucket = "assignment4_tfstate"
