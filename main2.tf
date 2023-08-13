@@ -42,11 +42,11 @@ resource "aws_vpc" "assignment4-vpc" {
 }
 
 resource "aws_internet_gateway" "assignment-2-vpc-igw" {
-  vpc_id = aws_vpc.assignment2-vpc.id
+  vpc_id = aws_vpc.assignment4-vpc.id
 }
 
 resource "aws_route_table" "public-route-table" {
-  vpc_id = aws_vpc.assignment2-vpc.id
+  vpc_id = aws_vpc.assignment4-vpc.id
   tags   = { Name = "public_route_table" }
 }
 
@@ -58,18 +58,18 @@ resource "aws_route_table_association" "rt-association" {
 resource "aws_subnet" "public-subnet" {
   availability_zone = var.az-public-subnet
   cidr_block        = var.subnet-cidr
-  vpc_id            = aws_vpc.assignment2-vpc.id
+  vpc_id            = aws_vpc.assignment4-vpc.id
   tags              = { Name = "public_subnet" }
 }
 resource "aws_security_group" "main-security-group" {
   name        = "main-security-group"
-  vpc_id      = aws_vpc.assignment2-vpc.id
+  vpc_id      = aws_vpc.assignment4-vpc.id
   description = "inbound for all IPs -SSH, HTTP. outbound for all protocols and types"
   tags        = { Name = "main_security_group" }
 }
 
 resource "aws_network_acl" "NACL" {
-  vpc_id = aws_vpc.assignment2-vpc.id
+  vpc_id = aws_vpc.assignment4-vpc.id
   tags = {
   Name = "assignment4_NACL" }
 }
