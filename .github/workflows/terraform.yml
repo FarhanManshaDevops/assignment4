@@ -32,4 +32,7 @@ jobs:
     
       - name: terraform_apply_command
         run: terraform apply --auto-approve -lock=false
+
+      - name: terraform destroy
+        run: terraform destroy --auto-approve -lock=false
       
