@@ -85,7 +85,7 @@ resource "aws_instance" "ec2-instance" {
   instance_type               = var.instance-type
   vpc_security_group_ids      = [aws_security_group.main-security-group.id]
   subnet_id                   = aws_subnet.public-subnet.id
-  tags {
+  tags = {
     Name = "assignment4instance"
   }
 }
