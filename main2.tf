@@ -1,16 +1,16 @@
-/*
+
 terraform {
   backend "s3" {
     bucket         = "assignment4tfstate12345"
     key            = "statefiles/terraform.tfstate"
-    region         = "us-east-1"              
-    encrypt        = true                     
-    dynamodb_table = "assignment4_state_lock_12345" 
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "assignment4_state_lock_12345"
   }
 }
-*/
 
 
+/*
 resource "aws_s3_bucket" "statefilebucket123" {
   bucket = "assignment4tfstate12345"
   versioning {
@@ -34,6 +34,7 @@ resource "aws_dynamodb_table" "statelock" {
   }
 
 }
+*/
 /*
 resource "aws_vpc" "assignment2-vpc" {
   cidr_block = var.vpc-cidr-block
