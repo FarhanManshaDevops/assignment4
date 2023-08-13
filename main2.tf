@@ -1,18 +1,18 @@
 /*
 terraform {
   backend "s3" {
-    bucket         = "assignment4tfstate"
+    bucket         = "assignment4tfstate12345"
     key            = "statefiles/terraform.tfstate"
     region         = "us-east-1"              
     encrypt        = true                     
-    dynamodb_table = "assignment4_state_lock" 
+    dynamodb_table = "assignment4_state_lock_12345" 
   }
 }
 */
 
 
 resource "aws_s3_bucket" "statefilebucket123" {
-  bucket = "assignment4tfstate"
+  bucket = "assignment4tfstate12345"
   versioning {
     enabled = true
   }
@@ -25,7 +25,7 @@ resource "aws_s3_bucket" "statefilebucket123" {
   }
 }
 resource "aws_dynamodb_table" "statelock" {
-  name         = "assignment4_state_lock"
+  name         = "assignment4_state_lock_12345"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LOCKID"
   attribute {
