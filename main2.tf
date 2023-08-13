@@ -35,7 +35,7 @@ resource "aws_dynamodb_table" "statelock" {
 
 }
 */
-/*
+
 resource "aws_vpc" "assignment2-vpc" {
   cidr_block = var.vpc-cidr-block
   tags       = { Name = "terraform-assignment2-vpc" }
@@ -110,6 +110,6 @@ resource "aws_s3_bucket" "mybucket" {
   force_destroy = true
 }
 
-*/
+
 
 
