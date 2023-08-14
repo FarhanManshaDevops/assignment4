@@ -1,4 +1,3 @@
-
 terraform {
   backend "s3" {
     bucket         = "assignment4tfstate12345"
@@ -8,8 +7,6 @@ terraform {
     dynamodb_table = "assignment4_state_lock_12345"
   }
 }
-
-
 /*
 resource "aws_s3_bucket" "statefilebucket123" {
   bucket = "assignment4tfstate12345"
@@ -41,20 +38,35 @@ resource "aws_vpc" "assignment4-vpc" {
   tags       = { Name = "terraform-assignment4-vpc" }
 }
 
-resource "aws_internet_gateway" "assignment-2-vpc-igw" {
+resource "aws_internet_gateway" "assignment-4-vpc-igw" {
   vpc_id = aws_vpc.assignment4-vpc.id
+}
+
+resource "aws_internet_gateway_attachment" "igw-attachment" {
+  vpc_id              = aws_vpc.assignment4-vpc.id
+  internet_gateway_id = aws_internet_gateway.assignment-4-vpc-igw.id
 }
 
 resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.assignment4-vpc.id
   tags   = { Name = "public_route_table" }
 }
-
 resource "aws_route_table_association" "rt-association" {
   subnet_id      = aws_subnet.public-subnet.id
   route_table_id = aws_route_table.public-route-table.id
 }
-
+resource "aws_route" "local_route" {
+  route_table_id         = aws_route_table.public-route-table.vpc_id
+  destination_cidr_block = "10.0.0.0/16"
+  gateway_id             = "local"
+  depends_on             = [aws_route_table.public-route-table]
+}
+resource "aws_route" "igw_route" {
+  route_table_id         = aws_route_table.public-route-table.vpc_id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.assignment-4-vpc-igw.id
+  depends_on             = [aws_route_table.public-route-table, aws_internet_gateway.assignment-4-vpc-igw]
+}
 resource "aws_subnet" "public-subnet" {
   availability_zone = var.az-public-subnet
   cidr_block        = var.subnet-cidr
@@ -64,8 +76,53 @@ resource "aws_subnet" "public-subnet" {
 resource "aws_security_group" "main-security-group" {
   name        = "main-security-group"
   vpc_id      = aws_vpc.assignment4-vpc.id
-  description = "inbound for all IPs -SSH, HTTP. outbound for all protocols and types"
+  description = "inbound for all IPs,SSH, HTTP,HTTPS, custom TCP:port80. outbound for all protocols and types"
   tags        = { Name = "main_security_group" }
+}
+resource "aws_vpc_security_group_egress_rule" "egress_rule" {
+  security_group_id = aws_security_group.main-security-group.id
+  cidr_ipv4         = "0.0.0.0/0"
+  description       = "allows all outbound traffic"
+  ip_protocol       = "-1"
+  from_port         = "0"
+  to_port           = "0"
+  depends_on        = [aws_security_group.main-security-group]
+}
+resource "aws_vpc_security_group_ingress_rule" "ingress_rule_ssh" {
+  security_group_id = aws_security_group.main-security-group.id
+  cidr_ipv4         = "0.0.0.0/0"
+  description       = "allows all inbound ssh"
+  ip_protocol       = "TCP"
+  from_port         = "22"
+  to_port           = "22"
+  depends_on        = [aws_security_group.main-security-group]
+}
+resource "aws_vpc_security_group_ingress_rule" "ingress_rule_http" {
+  security_group_id = aws_security_group.main-security-group.id
+  cidr_ipv4         = "0.0.0.0/0"
+  description       = "allows all inbound HTTP"
+  ip_protocol       = "TCP"
+  from_port         = "80"
+  to_port           = "80"
+  depends_on        = [aws_security_group.main-security-group]
+}
+resource "aws_vpc_security_group_ingress_rule" "ingress_rule_https" {
+  security_group_id = aws_security_group.main-security-group.id
+  cidr_ipv4         = "0.0.0.0/0"
+  description       = "allows all inbound HTTPS"
+  ip_protocol       = "TCP"
+  from_port         = "443"
+  to_port           = "443"
+  depends_on        = [aws_security_group.main-security-group]
+}
+resource "aws_vpc_security_group_ingress_rule" "ingress_rule_nginx" {
+  security_group_id = aws_security_group.main-security-group.id
+  cidr_ipv4         = "0.0.0.0/0"
+  description       = "allows all inbound HTTPS"
+  ip_protocol       = "TCP"
+  from_port         = "81"
+  to_port           = "81"
+  depends_on        = [aws_security_group.main-security-group]
 }
 
 resource "aws_network_acl" "NACL" {
@@ -73,6 +130,29 @@ resource "aws_network_acl" "NACL" {
   tags = {
   Name = "assignment4_NACL" }
 }
+resource "aws_network_acl_rule" "NACL_ingress_rule" {
+  network_acl_id = aws_network_acl.NACL.id
+  rule_number    = "1"
+  egress         = false
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = "0"
+  to_port        = "0"
+  depends_on     = [aws_network_acl.NACL]
+}
+resource "aws_network_acl_rule" "NACL_egress_rule" {
+  network_acl_id = aws_network_acl.NACL.id
+  rule_number    = "1"
+  egress         = true
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = "0"
+  to_port        = "0"
+  depends_on     = [aws_network_acl.NACL]
+}
+
 resource "aws_network_acl_association" "NACL-assosiation" {
   network_acl_id = aws_network_acl.NACL.id
   subnet_id      = aws_subnet.public-subnet.id
