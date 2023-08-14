@@ -39,14 +39,15 @@ resource "aws_vpc" "assignment4-vpc" {
 }
 
 resource "aws_internet_gateway" "assignment-4-vpc-igw" {
-  vpc_id = aws_vpc.assignment4-vpc.id
+  vpc_id     = aws_vpc.assignment4-vpc.id
+  depends_on = [aws_vpc.assignment4-vpc]
 }
-
+/*
 resource "aws_internet_gateway_attachment" "igw-attachment" {
   vpc_id              = aws_vpc.assignment4-vpc.id
   internet_gateway_id = aws_internet_gateway.assignment-4-vpc-igw.id
 }
-
+*/
 resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.assignment4-vpc.id
   tags   = { Name = "public_route_table" }
@@ -54,15 +55,16 @@ resource "aws_route_table" "public-route-table" {
 resource "aws_route_table_association" "rt-association" {
   subnet_id      = aws_subnet.public-subnet.id
   route_table_id = aws_route_table.public-route-table.id
+  depends_on     = [aws_route_table.public-route-table]
 }
-resource "aws_route" "local_route" {
-  route_table_id         = aws_route_table.public-route-table.vpc_id
+/*resource "aws_route" "internalvpcroute" {
+  route_table_id         = aws_route_table.public-route-table.id
   destination_cidr_block = "10.0.0.0/16"
   gateway_id             = "local"
   depends_on             = [aws_route_table.public-route-table]
-}
+}*/
 resource "aws_route" "igw_route" {
-  route_table_id         = aws_route_table.public-route-table.vpc_id
+  route_table_id         = aws_route_table.public-route-table.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.assignment-4-vpc-igw.id
   depends_on             = [aws_route_table.public-route-table, aws_internet_gateway.assignment-4-vpc-igw]
@@ -84,9 +86,9 @@ resource "aws_vpc_security_group_egress_rule" "egress_rule" {
   cidr_ipv4         = "0.0.0.0/0"
   description       = "allows all outbound traffic"
   ip_protocol       = "-1"
-  from_port         = "0"
-  to_port           = "0"
-  depends_on        = [aws_security_group.main-security-group]
+  #from_port         = "0"
+  #to_port           = "0"
+  depends_on = [aws_security_group.main-security-group]
 }
 resource "aws_vpc_security_group_ingress_rule" "ingress_rule_ssh" {
   security_group_id = aws_security_group.main-security-group.id
@@ -156,6 +158,7 @@ resource "aws_network_acl_rule" "NACL_egress_rule" {
 resource "aws_network_acl_association" "NACL-assosiation" {
   network_acl_id = aws_network_acl.NACL.id
   subnet_id      = aws_subnet.public-subnet.id
+  depends_on     = [aws_network_acl.NACL]
 }
 
 resource "aws_instance" "ec2-instance" {
@@ -168,7 +171,7 @@ resource "aws_instance" "ec2-instance" {
   tags = {
     Name = "assignment4_instance"
   }
-  depends_on = [aws_vpc.assignment4-vpc]
+  depends_on = [aws_vpc.assignment4-vpc, aws_security_group.main-security-group, aws_subnet.public-subnet]
   key_name   = "ec2keypair"
 }
 
