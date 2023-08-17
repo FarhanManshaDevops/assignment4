@@ -197,7 +197,7 @@ resource "aws_s3_bucket" "mybucket" {
   }
   force_destroy = true
 }
-#push
+#push2
 
 
 
