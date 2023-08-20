@@ -9,7 +9,7 @@ on:
       terraform_operation:
         description: "Terraform operation: plan, apply, destroy"
         required: true
-        default: "apply"
+        default: "plan"
         type: choice
         options:
           - plan
@@ -53,3 +53,4 @@ jobs:
         run: terraform destroy --auto-approve -lock=false
         if: "${{ github.event.inputs.terraform_operation == 'destroy' }}"
 
+#
