@@ -3,6 +3,18 @@ on:
   push:
     branches:
     - master
+
+  workflow_dispatch:
+    inputs:
+      terraform_operation:
+        description: "Terraform operation: plan, apply, destroy"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
 jobs:
   terraform:
     
@@ -29,10 +41,15 @@ jobs:
       
       - name: terraform_planning_command
         run: terraform plan -lock=false
+        if: "${{ github.event.inputs.terraform_operation == 'plan' }}"
+
     
       - name: terraform_apply_command
         run: terraform apply --auto-approve -lock=false
+        if: "${{ github.event.inputs.terraform_operation == 'apply' }}"
 
-      #- name: terraform_destroy_command
-      #  run: terraform destroy --auto-approve -lock=false
-      
+
+      - name: terraform_destroy_command
+        run: terraform destroy --auto-approve -lock=false
+        if: "${{ github.event.inputs.terraform_operation == 'destroy' }}"
+
