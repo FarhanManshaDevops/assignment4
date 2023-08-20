@@ -8,8 +8,8 @@ on:
     inputs:
       terraform_operation:
         description: "Terraform operation: plan, apply, destroy"
-        required: true
-        default: "apply"
+        required: false
+        default: "plan"
         type: choice
         options:
           - plan
@@ -44,13 +44,15 @@ jobs:
         if: "${{ github.event.inputs.terraform_operation == 'plan' }}"
 
     
-      - name: terraform_apply_command
-        run: terraform apply --auto-approve -lock=false
-        if: "${{ github.event.inputs.terraform_operation == 'apply' }}"
+      #- name: terraform_apply_command
+      #  run: terraform apply --auto-approve -lock=false
+      #  if: "${{ github.event.inputs.terraform_operation == 'apply' }}"
 
 
       - name: terraform_destroy_command
         run: terraform destroy --auto-approve -lock=false
         if: "${{ github.event.inputs.terraform_operation == 'destroy' }}"
 
-#
+#https://www.reddit.com/r/Terraform/comments/z3f0sz/terrafrom_destroy_github_action_issue/?rdt=38770
+#link for manual workflow steps in github actions
+#This workflow is triggered on pushes to the "master" branch and can also be manually triggered using the "workflow_dispatch" event with an input parameter called "terraform_operation."
