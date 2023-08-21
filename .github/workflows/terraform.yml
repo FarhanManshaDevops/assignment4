@@ -13,6 +13,7 @@ on:
         type: choice
         options:
           - plan
+          - apply
           - destroy
 jobs:
   terraform:
@@ -45,10 +46,11 @@ jobs:
     
       - name: terraform_apply_command
         run: terraform apply --auto-approve -lock=false        
-        
+        if: "${{ github.event.inputs.terraform_operation == 'apply' }}"
+      
       - name: terraform_destroy_command
         run: terraform destroy --auto-approve -lock=false
-        if: "${{ github.event.inputs.terraform_operation == 'destroy' }}"
+        
 
 #https://www.reddit.com/r/Terraform/comments/z3f0sz/terrafrom_destroy_github_action_issue/?rdt=38770
 #link for manual workflow steps in github actions
