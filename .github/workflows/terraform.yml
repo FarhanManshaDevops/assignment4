@@ -50,6 +50,7 @@ jobs:
       
       - name: terraform_destroy_command
         run: terraform destroy --auto-approve -lock=false
+        if: "${{ github.event.inputs.terraform_operation == 'destroy' }}"
         
 
 #https://www.reddit.com/r/Terraform/comments/z3f0sz/terrafrom_destroy_github_action_issue/?rdt=38770
